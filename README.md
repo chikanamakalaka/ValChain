@@ -1,4 +1,4 @@
-# <img src="https://raw.githubusercontent.com/chikanamakalaka/valchain/master/logo.svg" width="300"/>
+# <img src="https://raw.githubusercontent.com/chikanamakalaka/valchain/master/V.png" width="300"/>
 
 Valchain is an Ethereum-based blockchain fork from [GoQuorum](https://github.com/ConsenSys/quorum).
 

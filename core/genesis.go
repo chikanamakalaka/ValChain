@@ -443,12 +443,12 @@ func DeveloperGenesisBlock(period uint64, faucet common.Address) *Genesis {
 func DefaultReiMainnetGenesisBlock() *Genesis {
 	return &Genesis{
 		Alloc: GenesisAlloc{
-			common.HexToAddress("0x770b89601B08521d8b6E0DEF22dFAEA8c6025AC7"): {
+			common.HexToAddress("0xc0d3fFf2D22001367abCF5D1C0eBD80C68cDDe12"): {
 				Balance: hexutil.MustDecodeBig("0x52b7d2dcc80cd2e4000000"),
 			},
 		},
 		Config: &params.ChainConfig{
-			ChainID:             big.NewInt(55555),
+			ChainID:             big.NewInt(2516),
 			HomesteadBlock:      big.NewInt(0),
 			ByzantiumBlock:      big.NewInt(0),
 			ConstantinopleBlock: big.NewInt(0),
@@ -476,7 +476,7 @@ func DefaultReiTestnetGenesisBlock() *Genesis {
 			},
 		},
 		Config: &params.ChainConfig{
-			ChainID:             big.NewInt(55556),
+			ChainID:             big.NewInt(2517),
 			HomesteadBlock:      big.NewInt(0),
 			ByzantiumBlock:      big.NewInt(0),
 			ConstantinopleBlock: big.NewInt(0),
