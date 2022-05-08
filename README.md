@@ -30,8 +30,8 @@ buildctl build \
 ## Install
 
 ```shell
-git clone https://github.com/chikanamakalaka/valchain.git
-cd valchain
+git clone https://github.com/Chikanamakalaka/ValChain.git
+cd ValChain
 make valchain
 ```
 
