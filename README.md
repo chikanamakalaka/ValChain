@@ -1,6 +1,6 @@
-# <img src="https://raw.githubusercontent.com/moonrhythm/rei/master/logo.svg" width="300"/>
+# <img src="https://raw.githubusercontent.com/chikanamakalaka/valchain/master/logo.svg" width="300"/>
 
-REI is an Ethereum-based blockchain fork from [GoQuorum](https://github.com/ConsenSys/quorum).
+Valchain is an Ethereum-based blockchain fork from [GoQuorum](https://github.com/ConsenSys/quorum).
 
 Key differences from GoQuorum:
 
@@ -30,9 +30,9 @@ buildctl build \
 ## Install
 
 ```shell
-git clone https://github.com/reichain/rei.git
-cd rei
-make rei
+git clone https://github.com/chikanamakalaka/valchain.git
+cd valchain
+make valchain
 ```
 
 ## Run RPC Node
@@ -40,13 +40,13 @@ make rei
 ### Mainnet
 
 ```shell
-rei --datadir ~/.rei/mainnet --mainnet --http
+valchain --datadir ~/.valchain/mainnet --mainnet --http
 ```
 
 ### Testnet
 
 ```shell
-rei --datadir ~/.rei/testnet --testnet --http
+valchain --datadir ~/.valchain/testnet --testnet --http
 ```
 
 ## License

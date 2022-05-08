@@ -12,9 +12,9 @@ GOBIN = ./build/bin
 GO ?= latest
 GORUN = env GO111MODULE=on go run
 
-rei:
+valchain:
 	$(GORUN) build/ci.go install ./cmd/geth
-	cp $(GOBIN)/geth $(GOPATH)/bin/rei
+	cp $(GOBIN)/geth $(GOPATH)/bin/valchain
 
 geth:
 	$(GORUN) build/ci.go install ./cmd/geth

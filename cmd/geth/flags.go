@@ -182,7 +182,7 @@ var (
 	}
 	IncludeIncompletesFlag = cli.BoolFlag{
 		Name:  "incompletes",
-		Usage: "Include accounts for which we don't have the address (missing preimage)",
+		Usage: "Include accounts for which we don't have the address (missing pvalchainmage)",
 	}
 	ExcludeCodeFlag = cli.BoolFlag{
 		Name:  "nocode",
@@ -414,9 +414,9 @@ var (
 		Name:  "cache.noprefetch",
 		Usage: "Disable heuristic state prefetch during block import (less CPU and disk IO, more time waiting for data)",
 	}
-	CachePreimagesFlag = cli.BoolFlag{
-		Name:  "cache.preimages",
-		Usage: "Enable recording the SHA3/keccak preimages of trie keys",
+	CachePvalchainmagesFlag = cli.BoolFlag{
+		Name:  "cache.pvalchainmages",
+		Usage: "Enable recording the SHA3/keccak pvalchainmages of trie keys",
 	}
 	// Miner settings
 	MiningEnabledFlag = cli.BoolFlag{
@@ -1579,10 +1579,10 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 		cfg.NoPrefetch = ctx.GlobalBool(CacheNoPrefetchFlag.Name)
 	}
 	// Read the value from the flag no matter if it's set or not.
-	cfg.Preimages = ctx.GlobalBool(CachePreimagesFlag.Name)
-	if true || cfg.NoPruning && !cfg.Preimages { // TODO: Quorum; force preimages for contract extension and dump of states compatibility, until a fix is found
-		cfg.Preimages = true
-		log.Info("Enabling recording of key preimages since archive mode is used")
+	cfg.Pvalchainmages = ctx.GlobalBool(CachePvalchainmagesFlag.Name)
+	if true || cfg.NoPruning && !cfg.Pvalchainmages { // TODO: Quorum; force pvalchainmages for contract extension and dump of states compatibility, until a fix is found
+		cfg.Pvalchainmages = true
+		log.Info("Enabling recording of key pvalchainmages since archive mode is used")
 	}
 	if ctx.GlobalIsSet(TxLookupLimitFlag.Name) {
 		cfg.TxLookupLimit = ctx.GlobalUint64(TxLookupLimitFlag.Name)
@@ -1616,7 +1616,7 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 	}
 	if ctx.GlobalIsSet(VMEnableDebugFlag.Name) {
 		// TODO(fjl): force-enable this in --dev mode
-		cfg.EnablePreimageRecording = ctx.GlobalBool(VMEnableDebugFlag.Name)
+		cfg.EnablePvalchainmageRecording = ctx.GlobalBool(VMEnableDebugFlag.Name)
 	}
 
 	if ctx.GlobalIsSet(EWASMInterpreterFlag.Name) {
@@ -1655,14 +1655,14 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
 			cfg.NetworkId = 55555
 		}
-		cfg.Genesis = core.DefaultReiMainnetGenesisBlock()
-		// SetDNSDiscoveryDefaults(cfg, params.ReiMainnetGenesisHash)
+		cfg.Genesis = core.DefaultvalchainMainnetGenesisBlock()
+		// SetDNSDiscoveryDefaults(cfg, params.valchainMainnetGenesisHash)
 	case ctx.GlobalBool(TestnetFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
 			cfg.NetworkId = 55556
 		}
-		cfg.Genesis = core.DefaultReiTestnetGenesisBlock()
-		// SetDNSDiscoveryDefaults(cfg, params.ReiTestnetGenesisHash)
+		cfg.Genesis = core.DefaultvalchainTestnetGenesisBlock()
+		// SetDNSDiscoveryDefaults(cfg, params.valchainTestnetGenesisHash)
 		// case ctx.GlobalBool(DeveloperFlag.Name):
 		// 	if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
 		// 		cfg.NetworkId = 1337
@@ -1893,9 +1893,9 @@ func MakeGenesis(ctx *cli.Context) *core.Genesis {
 	var genesis *core.Genesis
 	switch {
 	case ctx.GlobalBool(MainnetFlag.Name):
-		genesis = core.DefaultReiMainnetGenesisBlock()
+		genesis = core.DefaultvalchainMainnetGenesisBlock()
 	case ctx.GlobalBool(TestnetFlag.Name):
-		genesis = core.DefaultReiTestnetGenesisBlock()
+		genesis = core.DefaultvalchainTestnetGenesisBlock()
 		// case ctx.GlobalBool(DeveloperFlag.Name):
 		// 	Fatalf("Developer chains are ephemeral")
 	}
@@ -1954,11 +1954,11 @@ func MakeChain(ctx *cli.Context, stack *node.Node, useExist bool) (chain *core.B
 		TrieDirtyDisabled:   ctx.GlobalString(GCModeFlag.Name) == "archive",
 		TrieTimeLimit:       ethconfig.Defaults.TrieTimeout,
 		SnapshotLimit:       ethconfig.Defaults.SnapshotCache,
-		Preimages:           ctx.GlobalBool(CachePreimagesFlag.Name),
+		Pvalchainmages:           ctx.GlobalBool(CachePvalchainmagesFlag.Name),
 	}
-	if cache.TrieDirtyDisabled && !cache.Preimages {
-		cache.Preimages = true
-		log.Info("Enabling recording of key preimages since archive mode is used")
+	if cache.TrieDirtyDisabled && !cache.Pvalchainmages {
+		cache.Pvalchainmages = true
+		log.Info("Enabling recording of key pvalchainmages since archive mode is used")
 	}
 	if !ctx.GlobalBool(SnapshotFlag.Name) {
 		cache.SnapshotLimit = 0 // Disabled
@@ -1969,7 +1969,7 @@ func MakeChain(ctx *cli.Context, stack *node.Node, useExist bool) (chain *core.B
 	if ctx.GlobalIsSet(CacheFlag.Name) || ctx.GlobalIsSet(CacheGCFlag.Name) {
 		cache.TrieDirtyLimit = ctx.GlobalInt(CacheFlag.Name) * ctx.GlobalInt(CacheGCFlag.Name) / 100
 	}
-	vmcfg := vm.Config{EnablePreimageRecording: ctx.GlobalBool(VMEnableDebugFlag.Name)}
+	vmcfg := vm.Config{EnablePvalchainmageRecording: ctx.GlobalBool(VMEnableDebugFlag.Name)}
 
 	// TODO(rjl493456442) disable snapshot generation/wiping if the chain is read only.
 	// Disable transaction indexing/unindexing by default.
@@ -2020,13 +2020,13 @@ func MigrateFlags(action func(ctx *cli.Context) error) func(*cli.Context) error 
 	}
 }
 
-func setReiMainnetDefaultPeers(ctx *cli.Context, cfg *p2p.Config) {
+func setvalchainMainnetDefaultPeers(ctx *cli.Context, cfg *p2p.Config) {
 	cfg.StaticNodes = append(cfg.StaticNodes,
 		enode.MustParse("enode://c0b1b09cf64be2a8d2fb18c2f7d02031915769cc00ef1dc3298834527f5ad2b03c0dce1a439617f8afdfe0c005e5d13f46eeb24c1779eb2a85e87bf49d872e6b@34.124.237.65:30303"),
 	)
 }
 
-func setReiTestnetDefaultPeers(ctx *cli.Context, cfg *p2p.Config) {
+func setvalchainTestnetDefaultPeers(ctx *cli.Context, cfg *p2p.Config) {
 	cfg.StaticNodes = append(cfg.StaticNodes,
 		enode.MustParse("enode://8fece8dfa7a32bf50b0d8136c1d6b18e0547721a33e270696762c7df125c0532f60b64c049122e4aa351410e2ee4e449b76dedf679078fd81bfad3e64145a7e5@34.87.147.60:30303"),
 	)
